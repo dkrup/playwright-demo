@@ -1,5 +1,56 @@
 import { test, expect } from '@playwright/test';
 
+
+test.describe('Homepage tests written by Playwright + Copilot + MCP tools', () => {
+
+  test('Homepage loads and shows main menu', async ({ page }) => {
+    await page.goto('http://www.automationpractice.pl/index.php');
+    await expect(page.locator('#block_top_menu')).toBeVisible();
+  });
+
+  test('Can navigate to T-shirts category', async ({ page }) => {
+  await page.goto('http://www.automationpractice.pl/index.php');
+  await page.getByRole('link', { name: 'T-shirts' }).click();
+  await expect(page).toHaveURL(/controller=category/);
+  await expect(page.locator('.cat-name')).toHaveText(/T-shirts/i);
+  });
+
+  test('Contact us link is visible', async ({ page }) => {
+    await page.goto('http://www.automationpractice.pl/index.php');
+    await expect(page.locator('#contact-link')).toContainText('Contact us');
+  });
+});
+
+test.describe('T-shirts Category Page Tests written by Playwright + Copilot + MCP tools', () => {
+    const categoryUrl = 'http://www.automationpractice.pl/index.php?id_category=5&controller=category';
+
+    test('Category page loads successfully', async ({ page }) => {
+        await page.goto(categoryUrl);
+        await expect(page.locator('.cat-name')).toHaveText(/T-shirts/i);
+    });
+
+    test('Product list is visible', async ({ page }) => {
+        await page.goto(categoryUrl);
+        await expect(page.locator('.product_list')).toBeVisible();
+    });
+
+    test('Sort by dropdown is present', async ({ page }) => {
+        await page.goto(categoryUrl);
+        await expect(page.getByLabel('Sort by')).toBeVisible();
+    });
+
+    test('Can filter by size S', async ({ page }) => {
+        await page.goto(categoryUrl);
+        await page.getByRole('checkbox', { name: /S \(1\)/ }).check();
+        await expect(page.locator('.product_list')).toBeVisible();
+    });
+
+    test('Contact us link is visible on category page', async ({ page }) => {
+        await page.goto(categoryUrl);
+        await expect(page.locator('#contact-link')).toContainText('Contact us');
+    });
+});
+
 test('Demo test example', async ({ page }) => {
   await page.goto('http://www.automationpractice.pl/index.php');
   await page.getByRole('link', { name: 'T-shirts' }).first().click();
@@ -7,7 +58,7 @@ test('Demo test example', async ({ page }) => {
   await page.goto('http://www.automationpractice.pl/index.php?id_category=5&controller=category#/size-s');
   await page.getByLabel('Sort by').selectOption('price:asc');
   await page.goto('http://www.automationpractice.pl/index.php?id_category=5&controller=category&orderby=price&orderway=asc&orderway=asc');
-  
+
   await expect(page.getByRole('link', { name: 'Faded Short Sleeve T-shirts' }).first()).toBeVisible();
   await expect(page.getByRole('link', { name: 'Faded Short Sleeve T-shirts' }).first()).toBeVisible();
   await expect(page.getByRole('link', { name: 'My Shop' })).toBeVisible();
